@@ -7,17 +7,15 @@ process.stdin.on('data', (data) => {
 
   if (input !== '') {
     console.log(`Your name is: ${input}`);
+    process.exit();
   } else {
     console.log('Your name is: (not provided)');
+    process.exit();
   }
-});
-
-process.stdin.on('end', () => {
-  console.log('This important software is now closing');
-  process.exit();
 });
 
 process.on('SIGINT', () => {
   console.log('This important software is now closing');
   process.exit();
 });
+
