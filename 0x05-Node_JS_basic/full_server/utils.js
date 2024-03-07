@@ -1,30 +1,29 @@
-// full_server/utils.js
 import fs from 'fs';
 
-/**
- * Reads the database asynchronously.
- * @param {string} filePath The path to the database file.
- * @returns {Promise} A promise that resolves to an object containing arrays of first names per field.
- */
-export function readDatabase(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        reject(new Error('Cannot load the database'));
-      } else {
-        const lines = data.trim().split('\n');
-        const students = {};
-
-        for (const line of lines.slice(1)) {
-          const [, firstname, field] = line.split(',');
-          if (!students[field]) {
-            students[field] = [];
+const readDatabase = (path) => new Promise((resolve, reject) => {
+  fs.readFile(path, 'utf8', (err, data) => {
+    if (err) reject(Error('Cannot load the database'));
+    else {
+      const hashtable = {};
+      const lines = data.split('\n');
+      let students = -1;
+      for (const line of lines) {
+        if (line.trim() !== '') {
+          const columns = line.split(',');
+          const field = columns[3];
+          const firstname = columns[0];
+          if (students >= 0) {
+            if (!Object.hasOwnProperty.call(hashtable, field)) {
+              hashtable[field] = [];
+            }
+            hashtable[field] = [...hashtable[field], firstname];
           }
-          students[field].push(firstname);
+          students += 1;
         }
-
-        resolve(students);
       }
-    });
+      resolve(hashtable);
+    }
   });
-}
+});
+
+export default readDatabase;
