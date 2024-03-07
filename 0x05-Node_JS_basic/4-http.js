@@ -1,4 +1,4 @@
-,const http = require('http');
+const http = require('http');
 
 const PORT = 1245;
 const HOST = 'localhost';
@@ -11,6 +11,7 @@ app.on('request', (_, res) => {
   res.setHeader('Content-Length', responseText.length);
   res.statusCode = 200;
   res.write(Buffer.from(responseText));
+  res.end();
 });
 
 app.listen(PORT, HOST, () => {
